@@ -29,10 +29,16 @@ class DedupeTest(unittest.TestCase):
     def setUp(self):
         self.options = Options()
         self.options.add_argument("--headless")
+        # self.options.add_experimental_option("detach", True)
         self.options.add_argument("--window-size=1280,768")
-        self.driver = webdriver.Chrome('chromedriver', chrome_options=self.options)
+        # self.options.add_argument("--no-sandbox")
+
+        desired = webdriver.DesiredCapabilities.CHROME
+        desired['loggingPrefs'] = {'browser': 'ALL'}
+
+        self.driver = webdriver.Chrome('chromedriver', chrome_options=self.options, desired_capabilities=desired)
         self.driver.implicitly_wait(30)
-        self.base_url = "http://localhost:8080/"
+        self.base_url = os.environ['DD_BASE_URL']
         self.verificationErrors = []
         self.accept_next_alert = True
         self.relative_path = dir_path = os.path.dirname(os.path.realpath(__file__))
